@@ -1,4 +1,5 @@
 import './books.css';
+
 function fetchingBooks() {
 	let newBookList = [];
 	const Book = {
@@ -30,7 +31,7 @@ function fetchingBooks() {
 			newBookList = [...data.items];
 			newBookList.map((book, i) => {
 				let fixedSaleability = book.saleInfo.saleability.replace(/_/g, ' ');
-
+				if (book.volumeInfo.imageLinks === undefined) return;
 				if (!book.volumeInfo.description)
 					book.volumeInfo.description = 'This book has no discription';
 				if (!book.volumeInfo.categories) book.volumeInfo.categories = 'unknown';
