@@ -99,7 +99,6 @@ function displayBook(book) {
 	Book.appendChild(buttonsContainer);
 
 	booksContainer.appendChild(Book);
-	// console.log(books)
 }
 
 fetchingBooks();
