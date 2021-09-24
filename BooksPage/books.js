@@ -11,6 +11,7 @@ function fetchingBooks() {
 		publisher: null,
 		publishedDate: null,
 		id: null,
+		info: null,
 		price: 0,
 	};
 
@@ -51,6 +52,7 @@ function fetchingBooks() {
 				Book.publisher = book.volumeInfo.publisher;
 				Book.publishedDate = book.volumeInfo.publishedDate;
 				Book.id = book.id;
+				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
 			});
 		})
@@ -61,7 +63,6 @@ function fetchingBooks() {
 
 function displayBook(book) {
 	const booksContainer = document.querySelector('.booksContainer');
-
 	let imgPriceContainer = document.createElement('div');
 	let buttonsContainer = document.createElement('div');
 	let Book = document.createElement('div');
@@ -72,10 +73,11 @@ function displayBook(book) {
 	let btn1 = document.createElement('a');
 	let btn2 = document.createElement('button');
 
-	btn1.classList.add('link');
+	btn1.classList.add(`link`);
+	btn1.setAttribute('target', `_blank`);
 	btn2.classList.add('btn');
 
-	btn1.href = '/BooksPage/bookInfo/bookInfo.html';
+	btn1.href = book.info;
 	btn1.textContent = 'INFO';
 	btn2.innerText = 'ADD';
 
