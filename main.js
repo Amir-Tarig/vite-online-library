@@ -3,6 +3,8 @@ import './style.css';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
 import {
 	signInWithPopup,
+	onAuthStateChanged,
+	signOut,
 	getAuth,
 	GoogleAuthProvider,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
@@ -25,7 +27,7 @@ const provider = new GoogleAuthProvider();
 const auth = getAuth(app);
 auth.useDeviceLanguage();
 
-document.querySelector('.logIn').addEventListener('click', () => {
+document.querySelector('.signIn').addEventListener('click', () => {
 	signInWithPopup(auth, provider)
 		.then((result) => {
 			// This gives you a Google Access Token. You can use it to access the Google API.
@@ -33,7 +35,6 @@ document.querySelector('.logIn').addEventListener('click', () => {
 			const token = credential.accessToken;
 			// The signed-in user info.
 			const user = result.user;
-			console.log(user);
 			// ...
 		})
 		.catch((error) => {
@@ -47,4 +48,37 @@ document.querySelector('.logIn').addEventListener('click', () => {
 			// ...
 		});
 });
-console.log(auth);
+
+auth.onAuthStateChanged((user) => {
+	const outBtn = document.querySelector('.signOut');
+	const inBtn = document.querySelector('.signIn');
+	if (user) {
+		inBtn.disabled = true;
+		inBtn.classList.remove('inBtn');
+		// inBtn.style.color = 'black';
+
+		outBtn.disabled = false;
+		outBtn.classList.add('outBtn');
+
+		console.log('user is sign in');
+	} else {
+		inBtn.disabled = false;
+		inBtn.classList.add('inBtn');
+
+		outBtn.disabled = true;
+		outBtn.classList.remove('outBtn');
+		// outBtn.style.color = 'black';
+		console.log('usre is sign out');
+	}
+});
+
+const signOutBtn = document.querySelector('.signOut');
+signOutBtn.addEventListener('click', () => {
+	signOut(auth)
+		.then(() => {
+			console.log('user is sgin out');
+		})
+		.catch((error) => {
+			console.log('something went wrong');
+		});
+});
