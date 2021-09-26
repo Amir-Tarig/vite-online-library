@@ -63,13 +63,10 @@ function fetchingBooks() {
 				displayBook(Book);
 				storeInDb(Book);
 			});
-			console.log(newBookList);
 		})
 		.catch((err) => {
 			console.error(err);
 		});
-
-	// console.log(newBookList);
 }
 
 //display all the books on the screen
@@ -116,15 +113,17 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
-function storeInDb(book) {
-	const infoBtn = document.querySelector('.link');
-	infoBtn.addEventListener('click', function (e) {
-		e.preventDefault();
-		const dataSet = this.getAttribute(`data-id`);
-		console.log(dataSet);
+function storeInDb(books) {
+	const infoBtn = document.querySelectorAll('.link');
+	// console.log(infoBtn);
+	infoBtn.forEach((el) => {
+		el.addEventListener('click', function (e) {
+			// e.preventDefault();
+			const dataSet = this.getAttribute(`data-id`);
+			console.log(dataSet);
+		});
 	});
 
 	// console.log(book);
 }
-
 fetchingBooks();
