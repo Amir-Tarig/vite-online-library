@@ -1,4 +1,10 @@
 import './books.css';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
+
+//initializing firebase and firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
 
 function fetchingBooks() {
 	let newBookList = [];
@@ -15,6 +21,7 @@ function fetchingBooks() {
 		price: 0,
 	};
 
+	//fetching book from the API
 	fetch(
 		'https://google-books.p.rapidapi.com/volumes?key=AIzaSyAOsteuaW5ifVvA_RkLXh0mYs6GLAD6ykc',
 		{
@@ -54,13 +61,18 @@ function fetchingBooks() {
 				Book.id = book.id;
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
+				storeInDb(Book);
 			});
+			console.log(newBookList);
 		})
 		.catch((err) => {
 			console.error(err);
 		});
+
+	// console.log(newBookList);
 }
 
+//display all the books on the screen
 function displayBook(book) {
 	const booksContainer = document.querySelector('.booksContainer');
 	let imgPriceContainer = document.createElement('div');
@@ -75,11 +87,12 @@ function displayBook(book) {
 
 	btn1.classList.add(`link`);
 	btn1.setAttribute('target', `_blank`);
-	btn2.classList.add('btn');
-
+	btn1.setAttribute('data-id', `${book.id}`);
 	btn1.href = book.info;
 	btn1.textContent = 'INFO';
+
 	btn2.innerText = 'ADD';
+	btn2.classList.add('btn');
 
 	imgTag.classList.add('bookCover');
 	priceTag.classList.add('price');
@@ -101,6 +114,17 @@ function displayBook(book) {
 	Book.appendChild(buttonsContainer);
 
 	booksContainer.appendChild(Book);
+}
+
+function storeInDb(book) {
+	const infoBtn = document.querySelector('.link');
+	infoBtn.addEventListener('click', function (e) {
+		e.preventDefault();
+		const dataSet = this.getAttribute(`data-id`);
+		console.log(dataSet);
+	});
+
+	// console.log(book);
 }
 
 fetchingBooks();

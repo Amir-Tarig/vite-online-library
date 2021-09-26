@@ -1,6 +1,8 @@
 import './style.css';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
+
 import {
 	signInWithPopup,
 	onAuthStateChanged,
@@ -49,29 +51,50 @@ document.querySelector('.signIn').addEventListener('click', () => {
 		});
 });
 
+// user status change
 auth.onAuthStateChanged((user) => {
+	if (user) {
+		handleBtns(user);
+		console.log(user);
+	} else {
+		handleBtns(user);
+	}
+});
+
+//handle Buttons and routs when the user sign in/out
+function handleBtns(user) {
 	const outBtn = document.querySelector('.signOut');
 	const inBtn = document.querySelector('.signIn');
+	const disLink = document.querySelector('.disLink');
+	const disNavBtn = document.querySelector('.disNavBtn');
+
 	if (user) {
 		inBtn.disabled = true;
 		inBtn.classList.remove('inBtn');
-		// inBtn.style.color = 'black';
 
 		outBtn.disabled = false;
 		outBtn.classList.add('outBtn');
 
-		console.log('user is sign in');
+		disLink.style.pointerEvents = 'all';
+		disNavBtn.disabled = 'false';
+
+		// console.log('user is sign in');
 	} else {
 		inBtn.disabled = false;
 		inBtn.classList.add('inBtn');
-
+		disLink.style.pointerEvents = 'none';
+		disNavBtn.addEventListener('click', () => {
+			alert(
+				'You Need To Sign in With Your Google Acount To Get Access To This Section'
+			);
+		});
 		outBtn.disabled = true;
 		outBtn.classList.remove('outBtn');
-		// outBtn.style.color = 'black';
-		console.log('usre is sign out');
+		// console.log('usre is sign out');
 	}
-});
+}
 
+//sign-out users
 const signOutBtn = document.querySelector('.signOut');
 signOutBtn.addEventListener('click', () => {
 	signOut(auth)
