@@ -1,6 +1,11 @@
 import './books.css';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
+import {
+	getFirestore,
+	collection,
+	addDoc,
+	getDocs,
+} from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
 
 //initializing firebase and firestore
 const app = initializeApp(firebaseConfig);
@@ -61,8 +66,8 @@ function fetchingBooks() {
 				Book.id = book.id;
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
-				storeInDb(Book);
 			});
+			storeInDb(newBookList);
 		})
 		.catch((err) => {
 			console.error(err);
@@ -84,12 +89,12 @@ function displayBook(book) {
 
 	btn1.classList.add(`link`);
 	btn1.setAttribute('target', `_blank`);
-	btn1.setAttribute('data-id', `${book.id}`);
 	btn1.href = book.info;
 	btn1.textContent = 'INFO';
 
 	btn2.innerText = 'ADD';
 	btn2.classList.add('btn');
+	btn2.setAttribute('data-id', `${book.id}`);
 
 	imgTag.classList.add('bookCover');
 	priceTag.classList.add('price');
@@ -114,16 +119,44 @@ function displayBook(book) {
 }
 
 function storeInDb(books) {
-	const infoBtn = document.querySelectorAll('.link');
-	// console.log(infoBtn);
-	infoBtn.forEach((el) => {
-		el.addEventListener('click', function (e) {
-			// e.preventDefault();
-			const dataSet = this.getAttribute(`data-id`);
-			console.log(dataSet);
+	const addBtn = document.querySelectorAll('.btn');
+	addBtn.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			checkBooks(btn);
+			books.map(async (book) => {
+				if (book.id === btn.dataset.id) {
+					try {
+						let docRef = await addDoc(collection(db, 'Books'), {
+							title: book.volumeInfo.title,
+							categories: book.volumeInfo.categories[0],
+							author: book.volumeInfo.authors[0],
+							description: book.volumeInfo.description,
+							image: book.volumeInfo.imageLinks.smallThumbnail,
+							publisher: book.volumeInfo.publisher,
+							publishedDate: book.volumeInfo.publishedDate,
+							id: book.id,
+						});
+						console.log('Document written with ID: ', docRef.id);
+					} catch (e) {
+						console.error('Error adding document: ', e);
+					}
+				}
+			});
 		});
 	});
-
-	// console.log(book);
 }
+
+async function checkBooks(id) {
+	const querySnapshot = await getDocs(collection(db, 'Books'));
+	querySnapshot.forEach((doc) => {
+		if (id === doc.data().id) {
+			alert('you already added the Book');
+			return true;
+		} else {
+			return false;
+		}
+		// console.log(doc.data().id);
+	});
+}
+
 fetchingBooks();
