@@ -4,6 +4,8 @@ import {
 	getFirestore,
 	collection,
 	addDoc,
+	query,
+	where,
 	getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
 
@@ -67,7 +69,8 @@ function fetchingBooks() {
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
 			});
-			storeInDb(newBookList);
+			// storeInDb(newBookList);
+			handleAddBtn();
 		})
 		.catch((err) => {
 			console.error(err);
@@ -118,45 +121,29 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
-function storeInDb(books) {
-	const addBtn = document.querySelectorAll('.btn');
-	addBtn.forEach((btn) => {
-		btn.addEventListener('click', () => {
-			checkBooks(btn);
-			books.map(async (book) => {
-				if (book.id === btn.dataset.id) {
-					try {
-						let docRef = await addDoc(collection(db, 'Books'), {
-							title: book.volumeInfo.title,
-							categories: book.volumeInfo.categories[0],
-							author: book.volumeInfo.authors[0],
-							description: book.volumeInfo.description,
-							image: book.volumeInfo.imageLinks.smallThumbnail,
-							publisher: book.volumeInfo.publisher,
-							publishedDate: book.volumeInfo.publishedDate,
-							id: book.id,
-						});
-						console.log('Document written with ID: ', docRef.id);
-					} catch (e) {
-						console.error('Error adding document: ', e);
-					}
-				}
-			});
-		});
-	});
-}
-
-async function checkBooks(id) {
+async function handleAddBtn() {
+	const addBtn = document.querySelector('.btnContainer');
 	const querySnapshot = await getDocs(collection(db, 'Books'));
-	querySnapshot.forEach((doc) => {
-		if (id === doc.data().id) {
-			alert('you already added the Book');
-			return true;
-		} else {
-			return false;
-		}
-		// console.log(doc.data().id);
+
+	addBtn.addEventListener('click', (e) => {
+		console.log(e.targent);
 	});
 }
 
 fetchingBooks();
+
+// 		try {
+// 			let docRef = await addDoc(collection(db, 'Books'), {
+// 				title: book.volumeInfo.title,
+// 				categories: book.volumeInfo.categories[0],
+// 				author: book.volumeInfo.authors[0],
+// 				description: book.volumeInfo.description,
+// 				image: book.volumeInfo.imageLinks.smallThumbnail,
+// 				publisher: book.volumeInfo.publisher,
+// 				publishedDate: book.volumeInfo.publishedDate,
+// 				id: book.id,
+// 			});
+// 			console.log('Document written with ID: ', docRef.id);
+// 		} catch (e) {
+// 			console.error('Error adding document: ', e);
+// 		}
