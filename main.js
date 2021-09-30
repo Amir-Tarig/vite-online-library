@@ -1,7 +1,6 @@
 import './style.css';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
 
 import {
 	signInWithPopup,
@@ -55,11 +54,16 @@ document.querySelector('.signIn').addEventListener('click', () => {
 auth.onAuthStateChanged((user) => {
 	if (user) {
 		handleBtns(user);
-		console.log(user);
+		sendUser(user);
+		// console.log(user);
 	} else {
 		handleBtns(user);
 	}
 });
+
+export default function sendUser(user) {
+	console.log(user);
+}
 
 //handle Buttons and routs when the user sign in/out
 function handleBtns(user) {

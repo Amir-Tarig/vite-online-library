@@ -1,17 +1,24 @@
 import './books.css';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
 import {
+	onAuthStateChanged,
+	getAuth,
+} from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
+
+import {
 	getFirestore,
 	collection,
 	addDoc,
-	query,
-	where,
+	onSnapshot,
+	doc,
+	deleteDoc,
 	getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
 
 //initializing firebase and firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
+const auth = getAuth();
 
 function fetchingBooks() {
 	let newBookList = [];
@@ -69,8 +76,8 @@ function fetchingBooks() {
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
 			});
-			// storeInDb(newBookList);
-			handleAddBtn();
+			storeInDb(newBookList);
+			// handleAddBtn();
 		})
 		.catch((err) => {
 			console.error(err);
@@ -98,6 +105,7 @@ function displayBook(book) {
 	btn2.innerText = 'ADD';
 	btn2.classList.add('btn');
 	btn2.setAttribute('data-id', `${book.id}`);
+	btn2.setAttribute('disabled', true);
 
 	imgTag.classList.add('bookCover');
 	priceTag.classList.add('price');
@@ -121,17 +129,33 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
-async function handleAddBtn() {
-	const addBtn = document.querySelector('.btnContainer');
+async function storeInDb(books) {
+	// const addBtn = document.querySelector('.booksContainer');
+	const addBtn = document.querySelectorAll('.btn');
 	const querySnapshot = await getDocs(collection(db, 'Books'));
 
-	addBtn.addEventListener('click', (e) => {
-		console.log(e.targent);
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+			addBtn.forEach((btn) => {
+				btn.disabled = false;
+				btn.addEventListener('click', () => {
+					querySnapshot.forEach((snap) => {
+						const unsub = onSnapshot(doc(db, 'Books', snap.id), (doc) => {
+							console.log('Current data: ', doc.data());
+						});
+					});
+				});
+			});
+		} else {
+			console.log('don know');
+		}
 	});
 }
 
 fetchingBooks();
 
+// books.map(async (book) => {
+// 	if (book.id === e.target.dataset.id) {
 // 		try {
 // 			let docRef = await addDoc(collection(db, 'Books'), {
 // 				title: book.volumeInfo.title,
@@ -147,3 +171,5 @@ fetchingBooks();
 // 		} catch (e) {
 // 			console.error('Error adding document: ', e);
 // 		}
+// 	}
+// });
