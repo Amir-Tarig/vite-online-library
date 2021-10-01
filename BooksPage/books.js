@@ -11,6 +11,7 @@ import {
 	addDoc,
 	onSnapshot,
 	doc,
+	setDoc,
 	deleteDoc,
 	getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
@@ -18,7 +19,7 @@ import {
 //initializing firebase and firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
-const auth = getAuth();
+const auth = getAuth(app);
 
 function fetchingBooks() {
 	let newBookList = [];
@@ -129,20 +130,36 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
-async function storeInDb(books) {
+function storeInDb(books) {
 	// const addBtn = document.querySelector('.booksContainer');
 	const addBtn = document.querySelectorAll('.btn');
-	const querySnapshot = await getDocs(collection(db, 'Books'));
+	// const querySnapshot = await getDocs(collection(db, 'Books'));
 
-	onAuthStateChanged(auth, (user) => {
+	console.log(auth.currentUser.uid);
+	auth.onAuthStateChanged((user) => {
+		console.log(user);
 		if (user) {
 			addBtn.forEach((btn) => {
 				btn.disabled = false;
 				btn.addEventListener('click', () => {
-					querySnapshot.forEach((snap) => {
-						const unsub = onSnapshot(doc(db, 'Books', snap.id), (doc) => {
-							console.log('Current data: ', doc.data());
-						});
+					books.map(async (book) => {
+						if (book.id === btn.dataset.id) {
+							try {
+								let docRef = await addDoc(collection(db, `${user.uid}`), {
+									title: book.volumeInfo.title,
+									categories: book.volumeInfo.categories[0],
+									author: book.volumeInfo.authors[0],
+									description: book.volumeInfo.description,
+									image: book.volumeInfo.imageLinks.smallThumbnail,
+									publisher: book.volumeInfo.publisher,
+									publishedDate: book.volumeInfo.publishedDate,
+									id: book.id,
+								});
+								console.log('Document written with ID: ', docRef.id);
+							} catch (e) {
+								console.error('Error adding document: ', e);
+							}
+						}
 					});
 				});
 			});
@@ -172,4 +189,16 @@ fetchingBooks();
 // 			console.error('Error adding document: ', e);
 // 		}
 // 	}
+// });
+
+// const booksRef = collection(db, 'Books');
+// setDoc(doc(booksRef, `${auth.currentUser.uid}`), {
+// 	title: book.volumeInfo.title,
+// 	categories: book.volumeInfo.categories[0],
+// 	author: book.volumeInfo.authors[0],
+// 	description: book.volumeInfo.description,
+// 	image: book.volumeInfo.imageLinks.smallThumbnail,
+// 	publisher: book.volumeInfo.publisher,
+// 	publishedDate: book.volumeInfo.publishedDate,
+// 	id: book.id,
 // });
