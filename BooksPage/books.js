@@ -10,6 +10,7 @@ import {
 	collection,
 	addDoc,
 	onSnapshot,
+	query,
 	doc,
 	setDoc,
 	deleteDoc,
@@ -18,7 +19,7 @@ import {
 
 //initializing firebase and firestore
 const app = initializeApp(firebaseConfig);
-const db = getFirestore();
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 function fetchingBooks() {
@@ -60,6 +61,7 @@ function fetchingBooks() {
 				if (!book.volumeInfo.categories) book.volumeInfo.categories = 'unknown';
 				if (!book.volumeInfo.publisher)
 					book.volumeInfo.publisher = 'Unknown publisher';
+				if (!book.volumeInfo.authors) book.volumeInfo.authors = 'Unknow author';
 				!book.saleInfo.listPrice
 					? (Book.price = fixedSaleability)
 					: book.saleInfo.listPrice.amount === 0
@@ -76,10 +78,15 @@ function fetchingBooks() {
 				Book.id = book.id;
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
+				console.log(book.volumeInfo.authors[0]);
 			});
-			storeInDb(newBookList);
 			// handleAddBtn();
+			storeInDb(data.items);
+			return data;
 		})
+		// .then((data) => {
+		// 	console.log(data);
+		// })
 		.catch((err) => {
 			console.error(err);
 		});
@@ -130,18 +137,25 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
-function storeInDb(books) {
+async function storeInDb(books) {
 	// const addBtn = document.querySelector('.booksContainer');
 	const addBtn = document.querySelectorAll('.btn');
-	// const querySnapshot = await getDocs(collection(db, 'Books'));
 
-	console.log(auth.currentUser.uid);
 	auth.onAuthStateChanged((user) => {
-		console.log(user);
+		const querySnapshot = query(collection(db, `${user.uid}`));
+
 		if (user) {
 			addBtn.forEach((btn) => {
 				btn.disabled = false;
 				btn.addEventListener('click', () => {
+					// const unsub = onSnapshot(querySnapshot, (snap) => {
+					// 	snap.docChanges().forEach(async (change) => {
+					// 		if (change.doc.data().id === btn.dataset.id) {
+					// 			await deleteDoc(doc(db, `${user.uid}`, `${change.doc.id}`));
+					// 			console.log(change.doc.data());
+					// 		}
+					// 	});
+					// });
 					books.map(async (book) => {
 						if (book.id === btn.dataset.id) {
 							try {
