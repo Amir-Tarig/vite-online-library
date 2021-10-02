@@ -78,7 +78,6 @@ function fetchingBooks() {
 				Book.id = book.id;
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
-				console.log(book.volumeInfo.authors[0]);
 			});
 			// handleAddBtn();
 			storeInDb(data.items);
@@ -138,24 +137,17 @@ function displayBook(book) {
 }
 
 async function storeInDb(books) {
-	// const addBtn = document.querySelector('.booksContainer');
 	const addBtn = document.querySelectorAll('.btn');
 
-	auth.onAuthStateChanged((user) => {
-		const querySnapshot = query(collection(db, `${user.uid}`));
+	auth.onAuthStateChanged(async (user) => {
+		const booksInDb = await getDocs(collection(db, `${user.uid}`));
+		const querySnapshot = await query(collection(db, `${user.uid}`));
 
 		if (user) {
 			addBtn.forEach((btn) => {
 				btn.disabled = false;
-				btn.addEventListener('click', () => {
-					// const unsub = onSnapshot(querySnapshot, (snap) => {
-					// 	snap.docChanges().forEach(async (change) => {
-					// 		if (change.doc.data().id === btn.dataset.id) {
-					// 			await deleteDoc(doc(db, `${user.uid}`, `${change.doc.id}`));
-					// 			console.log(change.doc.data());
-					// 		}
-					// 	});
-					// });
+				btn.addEventListener('click', async () => {
+					await test(btn, user.uid);
 					books.map(async (book) => {
 						if (book.id === btn.dataset.id) {
 							try {
@@ -184,6 +176,18 @@ async function storeInDb(books) {
 }
 
 fetchingBooks();
+
+async function test(btn, id) {
+	const querySnapshot = await getDocs(collection(db, `${id}`));
+
+	querySnapshot.forEach(async (book) => {
+		if (book.data().id === btn.dataset.id) {
+			await deleteDoc(doc(db, `${id}`, `${book.id}`));
+			alert('You already add the book once');
+			console.log(book.id);
+		}
+	});
+}
 
 // books.map(async (book) => {
 // 	if (book.id === e.target.dataset.id) {
