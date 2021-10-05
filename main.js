@@ -36,7 +36,7 @@ document.querySelector('.signIn').addEventListener('click', () => {
 			const token = credential.accessToken;
 			// The signed-in user info.
 			const user = result.user;
-			// ...
+			greetingUser(user);
 		})
 		.catch((error) => {
 			// Handle Errors here.
@@ -54,16 +54,10 @@ document.querySelector('.signIn').addEventListener('click', () => {
 auth.onAuthStateChanged((user) => {
 	if (user) {
 		handleBtns(user);
-		sendUser(user);
-		// console.log(user);
 	} else {
 		handleBtns(user);
 	}
 });
-
-export default function sendUser(user) {
-	console.log(user);
-}
 
 //handle Buttons and routs when the user sign in/out
 function handleBtns(user) {
@@ -73,6 +67,8 @@ function handleBtns(user) {
 	const disNavBtn = document.querySelector('.disNavBtn');
 
 	if (user) {
+		// greetingUser(user);
+
 		inBtn.disabled = true;
 		inBtn.classList.remove('inBtn');
 
@@ -81,8 +77,6 @@ function handleBtns(user) {
 
 		disLink.style.pointerEvents = 'all';
 		disNavBtn.disabled = 'false';
-
-		// console.log('user is sign in');
 	} else {
 		inBtn.disabled = false;
 		inBtn.classList.add('inBtn');
@@ -94,7 +88,6 @@ function handleBtns(user) {
 		});
 		outBtn.disabled = true;
 		outBtn.classList.remove('outBtn');
-		// console.log('usre is sign out');
 	}
 }
 
@@ -109,3 +102,27 @@ signOutBtn.addEventListener('click', () => {
 			console.log('something went wrong');
 		});
 });
+
+function greetingUser(user) {
+	const modalContainer = document.createElement('div');
+	const userName = document.createElement('p');
+
+	if (user) {
+		modalContainer.classList.add('modal');
+
+		userName.classList.add('userName');
+		userName.textContent = `Welcome ${user.displayName}`;
+
+		modalContainer.appendChild(userName);
+		setTimeout(() => {
+			modalContainer.classList.add('toggle');
+		}, 500);
+		setTimeout(() => {
+			modalContainer.classList.remove('toggle');
+		}, 2500);
+
+		document.body.appendChild(modalContainer);
+	}
+}
+
+// greetingUser();

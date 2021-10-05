@@ -1,8 +1,11 @@
 import './books.css';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
 import {
-	onAuthStateChanged,
+	signInWithPopup,
+	signOut,
 	getAuth,
+	GoogleAuthProvider,
+	onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js';
 
 import {
@@ -21,6 +24,7 @@ import {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 function fetchingBooks() {
 	let newBookList = [];
@@ -79,13 +83,10 @@ function fetchingBooks() {
 				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
 			});
-			// handleAddBtn();
 			storeInDb(data.items);
 			return data;
 		})
-		// .then((data) => {
-		// 	console.log(data);
-		// })
+
 		.catch((err) => {
 			console.error(err);
 		});
@@ -112,7 +113,7 @@ function displayBook(book) {
 	btn2.innerText = 'ADD';
 	btn2.classList.add('btn');
 	btn2.setAttribute('data-id', `${book.id}`);
-	btn2.setAttribute('disabled', true);
+	// btn2.setAttribute('disabled', true);
 
 	imgTag.classList.add('bookCover');
 	priceTag.classList.add('price');
@@ -136,18 +137,25 @@ function displayBook(book) {
 	booksContainer.appendChild(Book);
 }
 
+//add book to the fireStore if the user is loged in
 async function storeInDb(books) {
 	const addBtn = document.querySelectorAll('.btn');
+	const outBtn = document.querySelector('.signOut');
+	const inBtn = document.querySelector('.signIn');
 
 	auth.onAuthStateChanged(async (user) => {
-		const booksInDb = await getDocs(collection(db, `${user.uid}`));
-		const querySnapshot = await query(collection(db, `${user.uid}`));
-
 		if (user) {
+			const booksInDb = await getDocs(collection(db, `${user.uid}`));
+			const querySnapshot = await query(collection(db, `${user.uid}`));
+			inBtn.disabled = true;
+			inBtn.classList.remove('inBtn');
+			outBtn.disabled = false;
+			outBtn.classList.add('outBtn');
+
 			addBtn.forEach((btn) => {
 				btn.disabled = false;
 				btn.addEventListener('click', async () => {
-					await test(btn, user.uid);
+					await checkStore(btn, user.uid);
 					books.map(async (book) => {
 						if (book.id === btn.dataset.id) {
 							try {
@@ -170,53 +178,84 @@ async function storeInDb(books) {
 				});
 			});
 		} else {
-			console.log('don know');
+			addBtn.forEach((btn) => {
+				btn.disabled = true;
+			});
+			inBtn.disabled = false;
+			inBtn.classList.add('inBtn');
+			outBtn.disabled = true;
+			outBtn.classList.remove('outBtn');
 		}
 	});
 }
 
-fetchingBooks();
-
-async function test(btn, id) {
+async function checkStore(btn, id) {
 	const querySnapshot = await getDocs(collection(db, `${id}`));
 
 	querySnapshot.forEach(async (book) => {
 		if (book.data().id === btn.dataset.id) {
 			await deleteDoc(doc(db, `${id}`, `${book.id}`));
-			alert('You already add the book once');
+			alert(`${book.data().title} - is already added to your collection`);
 			console.log(book.id);
 		}
 	});
 }
 
-// books.map(async (book) => {
-// 	if (book.id === e.target.dataset.id) {
-// 		try {
-// 			let docRef = await addDoc(collection(db, 'Books'), {
-// 				title: book.volumeInfo.title,
-// 				categories: book.volumeInfo.categories[0],
-// 				author: book.volumeInfo.authors[0],
-// 				description: book.volumeInfo.description,
-// 				image: book.volumeInfo.imageLinks.smallThumbnail,
-// 				publisher: book.volumeInfo.publisher,
-// 				publishedDate: book.volumeInfo.publishedDate,
-// 				id: book.id,
-// 			});
-// 			console.log('Document written with ID: ', docRef.id);
-// 		} catch (e) {
-// 			console.error('Error adding document: ', e);
-// 		}
-// 	}
-// });
+//log user in
+document.querySelector('.signIn').addEventListener('click', () => {
+	signInWithPopup(auth, provider)
+		.then((result) => {
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			const credential = GoogleAuthProvider.credentialFromResult(result);
+			const token = credential.accessToken;
+			// The signed-in user info.
+			const user = result.user;
+			greetingUser(user);
+		})
+		.catch((error) => {
+			// Handle Errors here.
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// The email of the user's account used.
+			const email = error.email;
+			// The AuthCredential type that was used.
+			const credential = GoogleAuthProvider.credentialFromError(error);
+			// ...
+		});
+});
 
-// const booksRef = collection(db, 'Books');
-// setDoc(doc(booksRef, `${auth.currentUser.uid}`), {
-// 	title: book.volumeInfo.title,
-// 	categories: book.volumeInfo.categories[0],
-// 	author: book.volumeInfo.authors[0],
-// 	description: book.volumeInfo.description,
-// 	image: book.volumeInfo.imageLinks.smallThumbnail,
-// 	publisher: book.volumeInfo.publisher,
-// 	publishedDate: book.volumeInfo.publishedDate,
-// 	id: book.id,
-// });
+//log user out
+const signOutBtn = document.querySelector('.signOut');
+signOutBtn.addEventListener('click', () => {
+	signOut(auth)
+		.then(() => {
+			console.log('user is sgin out');
+		})
+		.catch((error) => {
+			console.log('something went wrong');
+		});
+});
+
+function greetingUser(user) {
+	const modalContainer = document.createElement('div');
+	const userName = document.createElement('p');
+
+	if (user) {
+		modalContainer.classList.add('modal');
+
+		userName.classList.add('userName');
+		userName.textContent = `Welcome ${user.displayName}`;
+
+		modalContainer.appendChild(userName);
+		setTimeout(() => {
+			modalContainer.classList.add('toggle');
+		}, 500);
+		setTimeout(() => {
+			modalContainer.classList.remove('toggle');
+		}, 2500);
+
+		document.body.appendChild(modalContainer);
+	}
+}
+
+fetchingBooks();
