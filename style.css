@@ -179,9 +179,6 @@
 	color: white;
 }
 
-/* modalContainer.style.transition = `all 0.5s ease-in-out`;
-	modalContainer.style.transform = `translate(-50%, 0) `; */
-
 .toggle {
 	-webkit-transform: translate(-50%, 0);
 	-o-transform: translate(-50%, 0);

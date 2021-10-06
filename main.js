@@ -67,8 +67,6 @@ function handleBtns(user) {
 	const disNavBtn = document.querySelector('.disNavBtn');
 
 	if (user) {
-		// greetingUser(user);
-
 		inBtn.disabled = true;
 		inBtn.classList.remove('inBtn');
 
@@ -83,7 +81,7 @@ function handleBtns(user) {
 		disLink.style.pointerEvents = 'none';
 		disNavBtn.addEventListener('click', () => {
 			alert(
-				'You Need To Sign in With Your Google Acount To Get Access To This Section'
+				'You Need To Sign-in With Your Google Acount To Get Access To This Section'
 			);
 		});
 		outBtn.disabled = true;
@@ -124,5 +122,3 @@ function greetingUser(user) {
 		document.body.appendChild(modalContainer);
 	}
 }
-
-// greetingUser();

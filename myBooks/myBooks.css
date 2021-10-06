@@ -1,0 +1,161 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#header {
+	/* border: 1px solid red; */
+	display: flex;
+	justify-content: space-around;
+	background: #6c63ff;
+}
+
+#nav {
+	/* border: 1px solid red; */
+	width: 30%;
+}
+
+#nav ul {
+	display: flex;
+	justify-content: space-around;
+	height: 100%;
+	align-items: flex-end;
+	list-style: none;
+	padding-bottom: 10px;
+}
+
+.navBtn {
+	border: none;
+	outline: none;
+	background: none;
+	padding-bottom: 5px;
+	position: relative;
+}
+
+.navBtn::before {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	transition: width 0.4s ease-in-out;
+}
+
+.navBtn:hover::before {
+	/* background: #6c63ff; */
+	background: whitesmoke;
+	width: 100%;
+	height: 2px;
+}
+
+.link {
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: whitesmoke;
+}
+.userContainer {
+	display: flex;
+	align-items: center;
+	gap: 5em;
+}
+
+.imgContainer {
+	border-radius: 50%;
+	width: 70px;
+	height: 70px;
+	background: whitesmoke;
+}
+
+.userName {
+	color: whitesmoke;
+	font-size: 1.5em;
+}
+
+.userImg {
+	width: 100%;
+}
+
+.sign-out {
+	padding: 0.5em 2em;
+	border: none;
+	outline: none;
+	background: none;
+	color: whitesmoke;
+	letter-spacing: 1px;
+	transition: all 0.4s ease;
+	border: 1px solid whitesmoke;
+}
+
+.sign-out:hover {
+	box-shadow: 1px 1px 20px #ffffff, -1px -1px 20px #f9f9fb;
+}
+.addBooks {
+	height: 92vh;
+	width: 30%;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	background: #6c63ff;
+	color: whitesmoke;
+	margin-left: auto;
+}
+
+.info h2 {
+	font-size: 3em;
+}
+
+.BIS {
+	font-size: 2em;
+}
+
+.count {
+	padding: 1em;
+}
+
+#form {
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	border-radius: 5px;
+	background-color: rgba(0, 0, 0, 0.2);
+	padding: 20px;
+	border-radius: 10px;
+	margin-top: 5%;
+	color: whitesmoke;
+}
+
+#form input[type='text'],
+input[type='number'] {
+	width: 100%;
+	margin: 15px 0;
+	padding: 14px 20px;
+	border: none;
+	border-radius: 10px;
+}
+
+#disc {
+	margin-top: 3%;
+	padding: 1em;
+	resize: none;
+	border-radius: 10px;
+}
+
+#form input[type='checkbox'] {
+	margin-top: 5%;
+}
+
+#form input[type='submit'] {
+	padding: 0.5em 2em;
+	border: none;
+	outline: none;
+	background: none;
+	color: whitesmoke;
+	letter-spacing: 1px;
+	transition: all 0.4s ease;
+	border: 1px solid whitesmoke;
+	margin-top: 5%;
+}

@@ -142,15 +142,18 @@ async function storeInDb(books) {
 	const addBtn = document.querySelectorAll('.btn');
 	const outBtn = document.querySelector('.signOut');
 	const inBtn = document.querySelector('.signIn');
+	const disLink = document.querySelector('.disLink');
 
 	auth.onAuthStateChanged(async (user) => {
 		if (user) {
-			const booksInDb = await getDocs(collection(db, `${user.uid}`));
-			const querySnapshot = await query(collection(db, `${user.uid}`));
+			// const booksInDb = await getDocs(collection(db, `${user.uid}`));
+			// const querySnapshot = await query(collection(db, `${user.uid}`));
+
 			inBtn.disabled = true;
 			inBtn.classList.remove('inBtn');
 			outBtn.disabled = false;
 			outBtn.classList.add('outBtn');
+			disLink.style.pointerEvents = 'all';
 
 			addBtn.forEach((btn) => {
 				btn.disabled = false;
@@ -185,10 +188,13 @@ async function storeInDb(books) {
 			inBtn.classList.add('inBtn');
 			outBtn.disabled = true;
 			outBtn.classList.remove('outBtn');
+
+			disLink.style.pointerEvents = 'none';
 		}
 	});
 }
 
+//check the store for similarity
 async function checkStore(btn, id) {
 	const querySnapshot = await getDocs(collection(db, `${id}`));
 
