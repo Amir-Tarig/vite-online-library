@@ -45,8 +45,10 @@ signOutBtn.addEventListener('click', () => {
 
 //displaying user image and name
 function userInfo(user) {
-	const userImg = document.querySelector('.userImg');
-	userImg.src = user.photoURL;
+	if (user) {
+		const userImg = document.querySelector('.userImg');
+		userImg.src = user.photoURL;
+	}
 
 	// console.log(user);
 }
