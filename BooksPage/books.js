@@ -171,6 +171,7 @@ async function storeInDb(books) {
 									publisher: book.volumeInfo.publisher,
 									publishedDate: book.volumeInfo.publishedDate,
 									id: book.id,
+									read: false,
 								});
 								console.log('Document written with ID: ', docRef.id);
 							} catch (e) {
