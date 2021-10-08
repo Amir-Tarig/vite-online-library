@@ -62,6 +62,7 @@ async function userInfo(user) {
 	console.log(user);
 }
 
+//get user books from the fireStore db
 function userBooksInDb(user) {
 	const booksLengthInDb = document.querySelector('.bookNumber');
 	const q = query(collection(db, `${user.uid}`));
@@ -76,25 +77,33 @@ function userBooksInDb(user) {
 	});
 }
 
+//displaying userBooks
 function displayBooks(books) {
-	const bookImg = document.createElement('img');
 	const booksContainer = document.createElement('div');
-
 	booksContainer.classList.add('bookContainer');
 
 	books.map((book) => {
 		const userBook = document.createElement('div');
 		userBook.classList.add('book');
-		console.log(book);
 		userBook.innerHTML = `
-				<img class src='${book.image ? book.image : ''}'>
+				<img class="bookCover" src='${book.image ? book.image : ''}'>
 				<h3 class="bookTitle">${book.title}</h3>
-				<p>x</p>
-				<button>${book.read ? 'READ' : ' NOT READ'}</button>
+				<p class="dbtn">x</p>
+				<button  class="rBtn">${book.read ? 'READ' : 'NOT READ'}</button>
 		`;
 		booksContainer.appendChild(userBook);
 	});
 
 	document.body.appendChild(booksContainer);
-	console.log(books);
+	const rBtn = document.querySelectorAll('.rBtn');
+	toggleReadStatus(rBtn);
+}
+
+//toggle read status
+function toggleReadStatus(btns) {
+	btns.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			console.log('soosos');
+		});
+	});
 }
