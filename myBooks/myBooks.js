@@ -10,7 +10,7 @@ import {
 import {
 	getFirestore,
 	collection,
-	addDoc,
+	updateDoc,
 	onSnapshot,
 	query,
 	doc,
@@ -48,12 +48,12 @@ signOutBtn.addEventListener('click', () => {
 });
 
 //displaying user image and name
-async function userInfo(user) {
+function userInfo(user) {
 	if (user) {
 		const userImg = document.querySelector('.userImg');
 		const userName = document.querySelector('.userName');
-		userImg.src = await user.auth.currentUser.photoURL;
-		userName.textContent = await user.displayName;
+		userImg.src = user.photoURL;
+		userName.textContent = user.displayName;
 	} else {
 		userImg.src = '';
 		userImg.style.background = 'white';
@@ -64,32 +64,36 @@ async function userInfo(user) {
 
 //get user books from the fireStore db
 function userBooksInDb(user) {
+	const books = [];
+	const bookId = [];
 	const booksLengthInDb = document.querySelector('.bookNumber');
 	const q = query(collection(db, `${user.uid}`));
 	const unsubscribe = onSnapshot(q, (querySnapshot) => {
-		const books = [];
 		querySnapshot.forEach((doc) => {
 			books.push(doc.data());
+			bookId.push(doc.id);
 		});
 		booksLengthInDb.textContent = books.length;
 		console.log(`Current books: ${books.length}`);
-		displayBooks(books);
+		displayBooks(books, bookId, user.uid);
 	});
 }
 
 //displaying userBooks
-function displayBooks(books) {
+function displayBooks(books, bookId, userId) {
 	const booksContainer = document.createElement('div');
 	booksContainer.classList.add('bookContainer');
 
-	books.map((book) => {
+	books.map((book, i) => {
 		const userBook = document.createElement('div');
 		userBook.classList.add('book');
 		userBook.innerHTML = `
 				<img class="bookCover" src='${book.image ? book.image : ''}'>
 				<h3 class="bookTitle">${book.title}</h3>
 				<p class="dbtn">x</p>
-				<button  class="rBtn">${book.read ? 'READ' : 'NOT READ'}</button>
+				<button data-userUid="${userId}" data-bookId="${
+			bookId[i]
+		}" class="rBtn">NOT READ</button>
 		`;
 		booksContainer.appendChild(userBook);
 	});
@@ -101,9 +105,22 @@ function displayBooks(books) {
 
 //toggle read status
 function toggleReadStatus(btns) {
+	console.log(btns);
+
 	btns.forEach((btn) => {
-		btn.addEventListener('click', () => {
+		btn.addEventListener('click', async () => {
+			const book = doc(db, `${btn.dataset.useruid}`, `${btn.dataset.bookid}`);
+			await updateDoc(book, {
+				read: true,
+			});
 			console.log('soosos');
 		});
 	});
+
+	// 	const washingtonRef = doc(db, `${userUid}`, "DC");
+
+	// // Set the "capital" field of the city 'DC'
+	// await updateDoc(washingtonRef, {
+	//   capital: true
+	// });
 }
