@@ -108,12 +108,8 @@ function toggleReadStatus(btns) {
 	console.log(btns);
 
 	btns.forEach((btn) => {
-		btn.addEventListener('click', async () => {
-			const book = doc(db, `${btn.dataset.useruid}`, `${btn.dataset.bookid}`);
-			await updateDoc(book, {
-				read: true,
-			});
-			console.log('soosos');
+		btn.addEventListener('click', () => {
+			console.log('so');
 		});
 	});
 
