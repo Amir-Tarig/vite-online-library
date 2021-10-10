@@ -23,9 +23,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
 	if (user) {
-		userInfo(user);
+		await userInfo(user);
 		userBooksInDb(user);
 	} else {
 		console.log('donknow');
@@ -48,35 +48,45 @@ signOutBtn.addEventListener('click', () => {
 });
 
 //displaying user image and name
-function userInfo(user) {
+async function userInfo(user) {
 	if (user) {
 		const userImg = document.querySelector('.userImg');
 		const userName = document.querySelector('.userName');
-		userImg.src = user.photoURL;
-		userName.textContent = user.displayName;
+		userImg.src = await user.photoURL;
+		userName.textContent = await user.displayName;
 	} else {
 		userImg.src = '';
 		userImg.style.background = 'white';
 	}
-
-	console.log(user);
 }
 
 //get user books from the fireStore db
-function userBooksInDb(user) {
+async function userBooksInDb(user) {
 	const books = [];
 	const bookId = [];
+
 	const booksLengthInDb = document.querySelector('.bookNumber');
 	const q = query(collection(db, `${user.uid}`));
-	const unsubscribe = onSnapshot(q, (querySnapshot) => {
-		querySnapshot.forEach((doc) => {
-			books.push(doc.data());
-			bookId.push(doc.id);
-		});
-		booksLengthInDb.textContent = books.length;
-		console.log(`Current books: ${books.length}`);
-		displayBooks(books, bookId, user.uid);
+	const querySnapshot = await getDocs(q);
+
+	querySnapshot.forEach((doc) => {
+		// console.log(doc.data());
+		books.push(doc.data());
+		bookId.push(doc.id);
 	});
+
+	const unsubscribe = onSnapshot(q, (snapshot) => {
+		snapshot.docChanges().forEach((change) => {
+			if (change.type === 'added') {
+				// console.log('New city: ', change.doc.data());
+			}
+			if (change.type === 'modified') {
+				console.log('modified city: ', change.doc.data());
+			}
+		});
+	});
+
+	displayBooks(books, bookId, user.uid);
 }
 
 //displaying userBooks
@@ -106,15 +116,17 @@ function displayBooks(books, bookId, userId) {
 //toggle read status
 function toggleReadStatus(btns) {
 	console.log(btns);
-
 	btns.forEach((btn) => {
-		btn.addEventListener('click', () => {
+		btn.addEventListener('click', async () => {
+			const book = doc(db, `${btn.dataset.useruid}`, `${btn.dataset.bookid}`);
+			// Set the "capital" field of the city 'DC'
+			await updateDoc(book, {
+				read: true,
+			});
 			console.log('so');
 		});
 	});
-
 	// 	const washingtonRef = doc(db, `${userUid}`, "DC");
-
 	// // Set the "capital" field of the city 'DC'
 	// await updateDoc(washingtonRef, {
 	//   capital: true
