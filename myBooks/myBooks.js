@@ -70,7 +70,6 @@ async function userBooksInDb(user) {
 	const querySnapshot = await getDocs(q);
 
 	querySnapshot.forEach((doc) => {
-		// console.log(doc.data());
 		books.push(doc.data());
 		bookId.push(doc.id);
 	});
@@ -81,7 +80,14 @@ async function userBooksInDb(user) {
 				// console.log('New city: ', change.doc.data());
 			}
 			if (change.type === 'modified') {
-				console.log('modified city: ', change.doc.data());
+				books.map((book) => {
+					if (book.id === change.doc.data().id) {
+						books.slice(book);
+						console.log(book);
+						books.push(change.doc.data());
+					}
+				});
+				// console.log('modified city: ', change.doc.data());
 			}
 		});
 	});
@@ -107,7 +113,6 @@ function displayBooks(books, bookId, userId) {
 		`;
 		booksContainer.appendChild(userBook);
 	});
-
 	document.body.appendChild(booksContainer);
 	const rBtn = document.querySelectorAll('.rBtn');
 	toggleReadStatus(rBtn);
