@@ -19,6 +19,9 @@ import {
 	getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
 
+const booksContainer = document.createElement('div');
+booksContainer.classList.add('bookContainer');
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -62,78 +65,71 @@ async function userInfo(user) {
 
 //get user books from the fireStore db
 async function userBooksInDb(user) {
-	const books = [];
-	const bookId = [];
-
+	let books = [];
+	let bookId = [];
 	const booksLengthInDb = document.querySelector('.bookNumber');
 	const q = query(collection(db, `${user.uid}`));
-	const querySnapshot = await getDocs(q);
+	// const querySnapshot = await getDocs(q);
 
-	querySnapshot.forEach((doc) => {
-		books.push(doc.data());
-		bookId.push(doc.id);
-	});
-
-	const unsubscribe = onSnapshot(q, (snapshot) => {
-		snapshot.docChanges().forEach((change) => {
-			if (change.type === 'added') {
-				// console.log('New city: ', change.doc.data());
-			}
-			if (change.type === 'modified') {
-				books.map((book) => {
-					if (book.id === change.doc.data().id) {
-						books.slice(book);
-						console.log(book);
-						books.push(change.doc.data());
-					}
-				});
-				// console.log('modified city: ', change.doc.data());
-			}
+	const unsubscribe = onSnapshot(q, (querySnapshot) => {
+		booksContainer.innerHTML = '';
+		books = [];
+		querySnapshot.forEach((doc) => {
+			books.push(doc.data());
+			bookId.push(doc.id);
 		});
+		console.log(books.length);
+		displayBooks(books, bookId, user.uid);
 	});
-
-	displayBooks(books, bookId, user.uid);
 }
 
 //displaying userBooks
-function displayBooks(books, bookId, userId) {
-	const booksContainer = document.createElement('div');
-	booksContainer.classList.add('bookContainer');
+async function displayBooks(books, bookId, userId) {
+	console.log(books.length);
 
 	books.map((book, i) => {
 		const userBook = document.createElement('div');
+		let bookImg = document.createElement('img');
+		const bookTitle = document.createElement('h3');
+		const deleteBtn = document.createElement('p');
+		const readBtn = document.createElement('button');
+
 		userBook.classList.add('book');
-		userBook.innerHTML = `
-				<img class="bookCover" src='${book.image ? book.image : ''}'>
-				<h3 class="bookTitle">${book.title}</h3>
-				<p class="dbtn">x</p>
-				<button data-userUid="${userId}" data-bookId="${
-			bookId[i]
-		}" class="rBtn">NOT READ</button>
-		`;
+		bookImg.classList.add('bookCover');
+		bookTitle.classList.add('bookTitle');
+		deleteBtn.classList.add('deleteBtn');
+		readBtn.classList.add('readBtn');
+
+		bookImg.src = book.image ? book.image : '';
+
+		bookTitle.textContent = book.title;
+		deleteBtn.textContent = 'x';
+		readBtn.textContent = 'NOT READ';
+		readBtn.setAttribute('data-bookId', bookId[i]);
+		readBtn.setAttribute('data-userId', userId);
+
+		userBook.appendChild(bookImg);
+		userBook.appendChild(bookTitle);
+		userBook.appendChild(deleteBtn);
+		userBook.appendChild(readBtn);
 		booksContainer.appendChild(userBook);
 	});
+
 	document.body.appendChild(booksContainer);
-	const rBtn = document.querySelectorAll('.rBtn');
+	const rBtn = document.querySelectorAll('.readBtn');
 	toggleReadStatus(rBtn);
 }
 
 //toggle read status
 function toggleReadStatus(btns) {
-	console.log(btns);
+	console.log(btns.length);
 	btns.forEach((btn) => {
 		btn.addEventListener('click', async () => {
-			const book = doc(db, `${btn.dataset.useruid}`, `${btn.dataset.bookid}`);
-			// Set the "capital" field of the city 'DC'
+			const book = doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`);
 			await updateDoc(book, {
-				read: true,
+				read: !read,
 			});
 			console.log('so');
 		});
 	});
-	// 	const washingtonRef = doc(db, `${userUid}`, "DC");
-	// // Set the "capital" field of the city 'DC'
-	// await updateDoc(washingtonRef, {
-	//   capital: true
-	// });
 }
