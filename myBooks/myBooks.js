@@ -78,14 +78,14 @@ async function userBooksInDb(user) {
 			books.push(doc.data());
 			bookId.push(doc.id);
 		});
-		console.log(books.length);
+		// console.log(books.length);
 		displayBooks(books, bookId, user.uid);
 	});
 }
 
 //displaying userBooks
 async function displayBooks(books, bookId, userId) {
-	console.log(books.length);
+	console.log(books);
 
 	books.map((book, i) => {
 		const userBook = document.createElement('div');
@@ -107,6 +107,7 @@ async function displayBooks(books, bookId, userId) {
 		readBtn.textContent = 'NOT READ';
 		readBtn.setAttribute('data-bookId', bookId[i]);
 		readBtn.setAttribute('data-userId', userId);
+		readBtn.setAttribute('data-state', book.read);
 
 		userBook.appendChild(bookImg);
 		userBook.appendChild(bookTitle);
@@ -122,14 +123,20 @@ async function displayBooks(books, bookId, userId) {
 
 //toggle read status
 function toggleReadStatus(btns) {
-	console.log(btns.length);
 	btns.forEach((btn) => {
 		btn.addEventListener('click', async () => {
-			const book = doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`);
-			await updateDoc(book, {
-				read: !read,
-			});
-			console.log('so');
+			console.log(typeof btn.dataset.state);
+			if (btn.dataset.state === 'false') {
+				const book = doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`);
+				await updateDoc(book, {
+					read: true,
+				});
+			} else {
+				const book = doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`);
+				await updateDoc(book, {
+					read: false,
+				});
+			}
 		});
 	});
 }
