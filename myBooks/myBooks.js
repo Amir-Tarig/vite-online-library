@@ -140,3 +140,5 @@ function toggleReadStatus(btns) {
 		});
 	});
 }
+
+function haldleForm() {}
