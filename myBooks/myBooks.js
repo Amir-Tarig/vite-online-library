@@ -14,7 +14,7 @@ import {
 	onSnapshot,
 	query,
 	doc,
-	setDoc,
+	addDoc,
 	deleteDoc,
 	getDocs,
 } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js';
@@ -30,6 +30,7 @@ auth.onAuthStateChanged(async (user) => {
 	if (user) {
 		await userInfo(user);
 		userBooksInDb(user);
+		handleFormInput(user);
 	} else {
 		console.log('donknow');
 	}
@@ -104,7 +105,7 @@ async function displayBooks(books, bookId, userId) {
 
 		bookTitle.textContent = book.title;
 		deleteBtn.textContent = 'x';
-		readBtn.textContent = 'NOT READ';
+		readBtn.textContent = book.read ? 'Read' : 'Not Read';
 		readBtn.setAttribute('data-bookId', bookId[i]);
 		readBtn.setAttribute('data-userId', userId);
 		readBtn.setAttribute('data-state', book.read);
@@ -141,4 +142,35 @@ function toggleReadStatus(btns) {
 	});
 }
 
-function haldleForm() {}
+function handleFormInput(user) {
+	const BookTitle = document.querySelector('#BookTitle');
+	const BookAuthor = document.querySelector('#BookAuthor');
+	const TotalPages = document.querySelector('#totalPages');
+	const BookDisc = document.querySelector('#disc');
+	const isRead = document.querySelector('#read');
+	const submitBtn = document.querySelector('.SubmitBtn');
+
+	submitBtn.addEventListener('click', async (e) => {
+		e.preventDefault();
+		try {
+			let docRef = await addDoc(collection(db, `${user.uid}`), {
+				title: BookTitle.value,
+				categories: 'unknown',
+				author: BookAuthor.value,
+				description: BookDisc.value,
+				pages: TotalPages.value,
+				image: '../images/Untitled.png',
+				read: isRead.checked,
+			});
+			console.log('Document written with ID: ', docRef.id);
+		} catch (e) {
+			console.error('Error adding document: ', e);
+		}
+		BookTitle.value = '';
+		BookAuthor.value = '';
+		BookDisc.value = '';
+		TotalPages.value = 0;
+		isRead.checked = false;
+		console.log();
+	});
+}
