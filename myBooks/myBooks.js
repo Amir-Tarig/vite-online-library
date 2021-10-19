@@ -86,8 +86,6 @@ async function userBooksInDb(user) {
 
 //displaying userBooks
 async function displayBooks(books, bookId, userId) {
-	console.log(books);
-
 	books.map((book, i) => {
 		const userBook = document.createElement('div');
 		let bookImg = document.createElement('img');
@@ -105,6 +103,8 @@ async function displayBooks(books, bookId, userId) {
 
 		bookTitle.textContent = book.title;
 		deleteBtn.textContent = 'x';
+		deleteBtn.setAttribute('data-bookId', bookId[i]);
+		deleteBtn.setAttribute('data-userId', userId);
 		readBtn.textContent = book.read ? 'Read' : 'Not Read';
 		readBtn.setAttribute('data-bookId', bookId[i]);
 		readBtn.setAttribute('data-userId', userId);
@@ -119,7 +119,9 @@ async function displayBooks(books, bookId, userId) {
 
 	document.body.appendChild(booksContainer);
 	const rBtn = document.querySelectorAll('.readBtn');
+	const dBtn = document.querySelectorAll('.deleteBtn');
 	toggleReadStatus(rBtn);
+	deleteBtn(dBtn);
 }
 
 //toggle read status
@@ -152,6 +154,30 @@ function handleFormInput(user) {
 
 	submitBtn.addEventListener('click', async (e) => {
 		e.preventDefault();
+		checkBooks();
+	});
+
+	async function checkBooks() {
+		const querySnapshot = await getDocs(collection(db, `${user.uid}`));
+		querySnapshot.forEach(async (doc) => {
+			if (
+				BookTitle.value === doc.data().title &&
+				BookAuthor.value === doc.data().author &&
+				BookDisc.value === doc.data().description
+			) {
+				alert('Book is exsist already ');
+			} else {
+				submitBook();
+			}
+		});
+		BookTitle.value = '';
+		BookAuthor.value = '';
+		BookDisc.value = '';
+		TotalPages.value = 0;
+		isRead.checked = false;
+	}
+
+	async function submitBook() {
 		try {
 			let docRef = await addDoc(collection(db, `${user.uid}`), {
 				title: BookTitle.value,
@@ -162,15 +188,29 @@ function handleFormInput(user) {
 				image: '../images/Untitled.png',
 				read: isRead.checked,
 			});
+			BookTitle.value = '';
+			BookAuthor.value = '';
+			BookDisc.value = '';
+			TotalPages.value = 0;
+			isRead.checked = false;
 			console.log('Document written with ID: ', docRef.id);
 		} catch (e) {
 			console.error('Error adding document: ', e);
 		}
-		BookTitle.value = '';
-		BookAuthor.value = '';
-		BookDisc.value = '';
-		TotalPages.value = 0;
-		isRead.checked = false;
-		console.log();
+	}
+}
+
+//handle the book delete button
+function deleteBtn(btns) {
+	btns.forEach((btn) => {
+		btn.addEventListener('click', async () => {
+			await deleteDoc(
+				doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`)
+			);
+		});
 	});
 }
+
+/**
+ *
+ */
