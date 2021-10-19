@@ -79,12 +79,12 @@ async function userBooksInDb(user) {
 			books.push(doc.data());
 			bookId.push(doc.id);
 		});
-		// console.log(books.length);
+		booksLengthInDb.textContent = books.length;
 		displayBooks(books, bookId, user.uid);
 	});
 }
 
-//displaying userBooks
+//displaying user Books
 async function displayBooks(books, bookId, userId) {
 	books.map((book, i) => {
 		const userBook = document.createElement('div');
@@ -144,38 +144,40 @@ function toggleReadStatus(btns) {
 	});
 }
 
+//handle form input
 function handleFormInput(user) {
 	const BookTitle = document.querySelector('#BookTitle');
 	const BookAuthor = document.querySelector('#BookAuthor');
 	const TotalPages = document.querySelector('#totalPages');
 	const BookDisc = document.querySelector('#disc');
 	const isRead = document.querySelector('#read');
-	const submitBtn = document.querySelector('.SubmitBtn');
+	const form = document.querySelector('#form');
 
-	submitBtn.addEventListener('click', async (e) => {
+	form.addEventListener('submit', async (e) => {
 		e.preventDefault();
-		checkBooks();
+		submitBook();
 	});
 
-	async function checkBooks() {
-		const querySnapshot = await getDocs(collection(db, `${user.uid}`));
-		querySnapshot.forEach(async (doc) => {
-			if (
-				BookTitle.value === doc.data().title &&
-				BookAuthor.value === doc.data().author &&
-				BookDisc.value === doc.data().description
-			) {
-				alert('Book is exsist already ');
-			} else {
-				submitBook();
-			}
-		});
-		BookTitle.value = '';
-		BookAuthor.value = '';
-		BookDisc.value = '';
-		TotalPages.value = 0;
-		isRead.checked = false;
-	}
+	// async function checkBooks() {
+	// 	const querySnapshot = await getDocs(collection(db, `${user.uid}`));
+	// 	querySnapshot.forEach(async (doc) => {
+	// 		console.log(doc);
+	// 		if (
+	// 			BookTitle.value === doc.data().title &&
+	// 			BookAuthor.value === doc.data().author &&
+	// 			BookDisc.value === doc.data().description
+	// 		) {
+	// 			BookTitle.value = '';
+	// 			BookAuthor.value = '';
+	// 			BookDisc.value = '';
+	// 			TotalPages.value = 0;
+	// 			isRead.checked = false;
+	// 			alert('Book is exsist already ');
+	// 		} else {
+	// 			submitBook();
+	// 		}
+	// 	});
+	// }
 
 	async function submitBook() {
 		try {
