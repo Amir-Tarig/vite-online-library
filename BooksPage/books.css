@@ -27,6 +27,7 @@ body {
 	position: -webkit-sticky;
 	top: 0px;
 	background-color: rgba(255, 255, 255, 0.8);
+	width: min-content;
 	width: fit-content;
 	display: flex;
 	align-items: center;
@@ -175,8 +176,8 @@ body {
 }
 
 .container {
-	padding: 2em 20em;
-	/* border: 1px solid red; */
+	padding: 2em 0;
+	border: 1px solid red;
 }
 
 .booksContainer {
@@ -188,6 +189,8 @@ body {
 	top: 2em;
 	margin: auto;
 	padding-bottom: 1.5em;
+	border: 1px solid red;
+	width: fit-content;
 }
 
 .book {
@@ -290,4 +293,70 @@ body {
 	font-weight: bold;
 	width: fit-content;
 	margin: auto;
+}
+
+@media screen and (max-width: 850px) {
+	#logoContainer {
+		border: 1px solid red;
+		margin-top: 10px;
+	}
+
+	.logo {
+		border: 1px solid red;
+		width: 3em;
+	}
+
+	.logoText {
+		display: none;
+	}
+
+	.price {
+		left: -15px;
+	}
+
+	.nav {
+		border: 1px solid red;
+		gap: 0;
+		justify-content: center;
+		width: 85%;
+	}
+
+	.linksContainer {
+		padding: 0;
+		border: 1px solid red;
+		gap: 2em;
+		width: 50%;
+		justify-content: center;
+	}
+
+	.logInContainer {
+		width: 50%;
+		margin-left: auto;
+	}
+
+	.logInContainer ul {
+		border: 1px solid red;
+		align-items: flex-start;
+		justify-content: center;
+		padding: 0;
+		gap: 2em;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	#logoContainer {
+		border: 1px solid red;
+		margin-top: 10px;
+	}
+
+	.logo {
+		border: 1px solid red;
+		width: 2.5em;
+	}
+	.signIn,
+	.signOut {
+		padding: 0.5em 1em;
+		border-radius: 10px;
+		font-size: 10px;
+	}
 }
