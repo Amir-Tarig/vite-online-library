@@ -52,7 +52,7 @@ body {
 .linksContainer {
 	display: flex;
 	gap: 4em;
-	padding: 0 1em;
+	padding: 0.5em 1em;
 }
 
 .links {
@@ -143,7 +143,6 @@ body {
 
 .test {
 	height: 100%;
-	border: 1px solid red;
 }
 
 .promoHeader figure {
@@ -177,7 +176,6 @@ body {
 
 .container {
 	padding: 2em 0;
-	border: 1px solid red;
 }
 
 .booksContainer {
@@ -189,7 +187,7 @@ body {
 	top: 2em;
 	margin: auto;
 	padding-bottom: 1.5em;
-	border: 1px solid red;
+	/* border: 1px solid red; */
 	width: fit-content;
 }
 
@@ -223,11 +221,9 @@ body {
 	background: white;
 	padding: 0.5em;
 	color: red;
-	/* border: 1px solid #6C63FF; */
 }
 
 .btnContainer {
-	/* border: 1px solid red; */
 	display: flex;
 	justify-content: space-between;
 	gap: 0.5em;
@@ -297,12 +293,12 @@ body {
 
 @media screen and (max-width: 850px) {
 	#logoContainer {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		margin-top: 10px;
 	}
 
 	.logo {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		width: 3em;
 	}
 
@@ -315,7 +311,7 @@ body {
 	}
 
 	.nav {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		gap: 0;
 		justify-content: center;
 		width: 85%;
@@ -323,7 +319,7 @@ body {
 
 	.linksContainer {
 		padding: 0;
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		gap: 2em;
 		width: 50%;
 		justify-content: center;
@@ -335,7 +331,7 @@ body {
 	}
 
 	.logInContainer ul {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		align-items: flex-start;
 		justify-content: center;
 		padding: 0;
@@ -345,18 +341,52 @@ body {
 
 @media screen and (max-width: 500px) {
 	#logoContainer {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		margin-top: 10px;
+		padding: 0.5em;
 	}
 
 	.logo {
-		border: 1px solid red;
+		/* border: 1px solid red; */
 		width: 2.5em;
+	}
+
+	.logInContainer ul {
+		gap: 0.5em;
 	}
 	.signIn,
 	.signOut {
-		padding: 0.5em 1em;
+		padding: 6px;
 		border-radius: 10px;
-		font-size: 10px;
+		font-size: 12px;
+	}
+
+	.linksContainer {
+		gap: 0.8em;
+		padding: 0;
+	}
+
+	.links {
+		/* border: 1px solid red; */
+		font-size: 15px;
+		letter-spacing: 0;
+		padding: 0;
+		align-self: center;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.linksContainer {
+		padding: 0 10px;
+	}
+
+	.signIn,
+	.signOut {
+		font-size: 12px;
+		padding: 2px;
+	}
+
+	.links {
+		font-size: 12px;
 	}
 }
