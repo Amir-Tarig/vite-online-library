@@ -212,7 +212,3 @@ function deleteBtn(btns) {
 		});
 	});
 }
-
-/**
- *
- */
