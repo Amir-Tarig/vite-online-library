@@ -315,3 +315,43 @@
 		width: 50px;
 	}
 }
+
+@media screen and (max-width: 500px) {
+	#header {
+		grid-template-columns: 40% 1fr;
+		grid-template-rows: auto;
+		grid-template-areas:
+			'logoContainer loginContainer'
+			'nav nav';
+		justify-items: stretch;
+		top: 0;
+		gap: 1em;
+		padding: 1em 0;
+	}
+
+	#logoContainer {
+		grid-area: logoContainer;
+	}
+
+	#nav {
+		grid-area: nav;
+		justify-self: center;
+		padding: 0.5em;
+	}
+
+	#nav ul {
+		gap: 2em;
+	}
+
+	.logInContainer {
+		grid-area: loginContainer;
+	}
+
+	.discription {
+		gap: 1em;
+	}
+
+	.main {
+		position: relative;
+	}
+}
