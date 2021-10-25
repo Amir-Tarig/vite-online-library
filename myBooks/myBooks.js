@@ -26,13 +26,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-auth.onAuthStateChanged(async (user) => {
+auth.onAuthStateChanged((user) => {
 	if (user) {
-		await userInfo(user);
+		userInfo(user);
 		userBooksInDb(user);
 		handleFormInput(user);
-	} else {
-		console.log('donknow');
 	}
 });
 
@@ -52,12 +50,12 @@ signOutBtn.addEventListener('click', () => {
 });
 
 //displaying user image and name
-async function userInfo(user) {
+function userInfo(user) {
 	if (user) {
 		const userImg = document.querySelector('.userImg');
 		const userName = document.querySelector('.userName');
-		userImg.src = await user.photoURL;
-		userName.textContent = await user.displayName;
+		userImg.setAttribute('src', user.photoURL);
+		userName.textContent = user.displayName;
 	} else {
 		userImg.src = '';
 		userImg.style.background = 'white';

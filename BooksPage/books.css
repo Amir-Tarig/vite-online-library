@@ -139,6 +139,7 @@ body {
 	justify-content: space-around;
 	align-items: center;
 	position: relative;
+	margin-top: 5px;
 }
 
 .test {
@@ -176,6 +177,8 @@ body {
 
 .container {
 	padding: 2em 0;
+	min-height: 80vh;
+	height: auto;
 }
 
 .booksContainer {
@@ -291,14 +294,41 @@ body {
 	margin: auto;
 }
 
+.footer {
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	align-self: end;
+	gap: 3em;
+	padding: 1em;
+	width: 100%;
+	/* border: 1px solid red; */
+	grid-area: footer;
+}
+
+.footer img {
+	width: 30px;
+}
+
+.youtube {
+	margin-top: 10px;
+}
+
+.footer a:hover {
+	transform: translateY(-10px);
+}
+
+.footer a {
+	transition: all 0.3s ease-in-out;
+}
+
 @media screen and (max-width: 850px) {
 	#logoContainer {
-		/* border: 1px solid red; */
 		margin-top: 10px;
 	}
 
 	.logo {
-		/* border: 1px solid red; */
 		width: 3em;
 	}
 
@@ -311,15 +341,14 @@ body {
 	}
 
 	.nav {
-		/* border: 1px solid red; */
 		gap: 0;
 		justify-content: center;
 		width: 85%;
+		height: 3em;
 	}
 
 	.linksContainer {
 		padding: 0;
-		/* border: 1px solid red; */
 		gap: 2em;
 		width: 50%;
 		justify-content: center;
@@ -328,6 +357,7 @@ body {
 	.logInContainer {
 		width: 50%;
 		margin-left: auto;
+		padding-top: 5px;
 	}
 
 	.logInContainer ul {
@@ -341,19 +371,19 @@ body {
 
 @media screen and (max-width: 500px) {
 	#logoContainer {
-		/* border: 1px solid red; */
 		margin-top: 10px;
 		padding: 0.5em;
+		margin-top: 0;
 	}
 
 	.logo {
-		/* border: 1px solid red; */
 		width: 2.5em;
 	}
 
 	.logInContainer ul {
 		gap: 0.5em;
 	}
+
 	.signIn,
 	.signOut {
 		padding: 6px;
@@ -363,15 +393,18 @@ body {
 
 	.linksContainer {
 		gap: 0.8em;
-		padding: 0;
+		padding-bottom: 2px;
 	}
 
 	.links {
-		/* border: 1px solid red; */
 		font-size: 15px;
 		letter-spacing: 0;
 		padding: 0;
-		align-self: center;
+		align-self: flex-end;
+	}
+
+	.footer {
+		gap: 1.5em;
 	}
 }
 
@@ -388,5 +421,9 @@ body {
 
 	.links {
 		font-size: 12px;
+	}
+
+	.footer {
+		gap: 1em;
 	}
 }
