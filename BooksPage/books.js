@@ -197,9 +197,10 @@ async function storeInDb(books) {
 
 //check the store for similarity
 async function checkStore(btn, id) {
+	const temp = [];
 	const querySnapshot = await getDocs(collection(db, `${id}`));
-
 	querySnapshot.forEach(async (book) => {
+		temp.push(book.data());
 		if (book.data().id === btn.dataset.id) {
 			await deleteDoc(doc(db, `${id}`, `${book.id}`));
 			alert(`${book.data().title} - is already added to your collection`);

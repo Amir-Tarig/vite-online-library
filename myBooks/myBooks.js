@@ -151,31 +151,32 @@ function handleFormInput(user) {
 	const isRead = document.querySelector('#read');
 	const form = document.querySelector('#form');
 
-	form.addEventListener('submit', async (e) => {
-		e.preventDefault();
-		submitBook();
-	});
+	async function checkBooks() {
+		const temp = [];
+		const querySnapshot = query(collection(db, `${user.uid}`));
+		const unsubscribe = onSnapshot(querySnapshot, (snapshot) => {
+			snapshot.forEach((doc) => {
+				temp.push(doc.data());
+			});
 
-	// async function checkBooks() {
-	// 	const querySnapshot = await getDocs(collection(db, `${user.uid}`));
-	// 	querySnapshot.forEach(async (doc) => {
-	// 		console.log(doc);
-	// 		if (
-	// 			BookTitle.value === doc.data().title &&
-	// 			BookAuthor.value === doc.data().author &&
-	// 			BookDisc.value === doc.data().description
-	// 		) {
-	// 			BookTitle.value = '';
-	// 			BookAuthor.value = '';
-	// 			BookDisc.value = '';
-	// 			TotalPages.value = 0;
-	// 			isRead.checked = false;
-	// 			alert('Book is exsist already ');
-	// 		} else {
-	// 			submitBook();
-	// 		}
-	// 	});
-	// }
+			if (temp.length < 10) {
+				form.addEventListener('submit', async (e) => {
+					e.preventDefault();
+					submitBook();
+				});
+			} else {
+				snapshot.forEach(async (book, i) => {
+					if (i > 10) {
+						console.log(book);
+						alert('You have exceeded the storage limit');
+						await deleteDoc(doc(db, `${user.uid}`, `${i.id}`));
+					}
+				});
+			}
+		});
+	}
+
+	checkBooks();
 
 	async function submitBook() {
 		try {
