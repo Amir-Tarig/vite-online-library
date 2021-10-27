@@ -83,7 +83,7 @@ async function userBooksInDb(user) {
 }
 
 //displaying user Books
-async function displayBooks(books, bookId, userId) {
+function displayBooks(books, bookId, userId) {
 	books.map((book, i) => {
 		const userBook = document.createElement('div');
 		let bookImg = document.createElement('img');
@@ -119,7 +119,7 @@ async function displayBooks(books, bookId, userId) {
 	const rBtn = document.querySelectorAll('.readBtn');
 	const dBtn = document.querySelectorAll('.deleteBtn');
 	toggleReadStatus(rBtn);
-	deleteBtn(dBtn);
+	handleDeleteBtn(dBtn);
 }
 
 //toggle read status
@@ -151,32 +151,10 @@ function handleFormInput(user) {
 	const isRead = document.querySelector('#read');
 	const form = document.querySelector('#form');
 
-	async function checkBooks() {
-		const temp = [];
-		const querySnapshot = query(collection(db, `${user.uid}`));
-		const unsubscribe = onSnapshot(querySnapshot, (snapshot) => {
-			snapshot.forEach((doc) => {
-				temp.push(doc.data());
-			});
-
-			if (temp.length < 10) {
-				form.addEventListener('submit', async (e) => {
-					e.preventDefault();
-					submitBook();
-				});
-			} else {
-				snapshot.forEach(async (book, i) => {
-					if (i > 10) {
-						console.log(book);
-						alert('You have exceeded the storage limit');
-						await deleteDoc(doc(db, `${user.uid}`, `${i.id}`));
-					}
-				});
-			}
-		});
-	}
-
-	checkBooks();
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		submitBook();
+	});
 
 	async function submitBook() {
 		try {
@@ -202,7 +180,7 @@ function handleFormInput(user) {
 }
 
 //handle the book delete button
-function deleteBtn(btns) {
+function handleDeleteBtn(btns) {
 	btns.forEach((btn) => {
 		btn.addEventListener('click', async () => {
 			await deleteDoc(

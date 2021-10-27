@@ -4,11 +4,22 @@
 	box-sizing: border-box;
 }
 
+body {
+	display: grid;
+	grid-template-columns: 1fr 30%;
+	grid-template-rows: auto;
+	grid-template-areas:
+		'header header'
+		'bookContainer form'
+		'footer footer';
+}
+
 #header {
 	/* border: 1px solid red; */
 	display: flex;
 	justify-content: space-around;
 	background: #6c63ff;
+	grid-area: header;
 }
 
 #nav {
@@ -94,18 +105,16 @@
 }
 
 .addBooks {
+	grid-area: form;
 	height: 92vh;
-	width: 30%;
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
+	/* justify-content: space-around; */
 	align-items: center;
 	background: #6c63ff;
 	color: whitesmoke;
 	margin-top: 2px;
-	margin-left: auto;
-	border: 1px solid red;
 }
 
 .info h2 {
@@ -165,13 +174,9 @@ input[type='number'] {
 }
 
 .bookContainer {
-	/* border: 1px solid red; */
-	max-width: 70%;
-	width: fit-content;
-	height: auto;
-	position: absolute;
-	top: 10vh;
+	grid-area: bookContainer;
 	display: flex;
+	justify-content: space-around;
 	flex-wrap: wrap;
 	gap: 2em;
 	padding: 1em;
@@ -182,6 +187,7 @@ input[type='number'] {
 	width: fit-content;
 	max-width: 14em;
 	position: relative;
+	margin-top: 2em;
 	box-shadow: 10px 0 60px rgba(0, 0, 255, 0.1),
 		-10px -10px 60px rgba(0, 0, 255, 0.1);
 }
@@ -236,9 +242,11 @@ input[type='number'] {
 	position: absolute;
 	top: 0;
 	right: 0;
+	cursor: pointer;
 }
 
 .footer {
+	grid-area: footer;
 	height: 100px;
 	display: flex;
 	justify-content: center;
@@ -247,8 +255,10 @@ input[type='number'] {
 	gap: 3em;
 	padding: 1em;
 	width: 100%;
-	/* border: 1px solid red; */
 	grid-area: footer;
+	margin-top: 2em;
+	border-top: 3px dotted #6c63ff;
+	background: #e9e9ec;
 }
 
 .footer img {
@@ -267,23 +277,99 @@ input[type='number'] {
 	transition: all 0.3s ease-in-out;
 }
 
+@media screen and (max-width: 1100px) {
+	body {
+		grid-template-columns: 1fr 40%;
+	}
+	.addBooks {
+		gap: 2em;
+		height: fit-content;
+		margin-top: 1em;
+	}
+
+	.info h2 {
+		font-size: 2em;
+	}
+
+	.BIS {
+		font-size: 1.5em;
+	}
+}
+
 @media screen and (max-width: 800px) {
+	body {
+		grid-template-columns: 1fr 1fr;
+	}
 	#header {
-		border: 1px solid red;
 		justify-content: space-between;
 	}
 
+	.userContainer {
+		gap: 2em;
+		padding: 0 5px;
+	}
+}
+
+@media screen and (max-width: 650px) {
+	body {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			'header'
+			'bookContainer'
+			'form'
+			'footer';
+	}
+
 	#logoContainer {
-		border: 1px solid red;
+		display: flex;
+		justify-content: center;
+		grid-area: logo;
+	}
+
+	.logo {
+		width: 3em;
 	}
 
 	#nav {
-		border: 1px solid red;
+		width: 60%;
+		grid-area: nav;
+		justify-self: center;
+	}
+
+	#nav ul li {
+		padding: 1.2em;
+	}
+
+	.link {
+		color: #6c63ff;
+	}
+
+	#header {
+		background: none;
+		display: grid;
+		grid-template-columns: 20% 1fr;
+		grid-template-rows: auto;
+		grid-template-areas:
+			'logo userContainer'
+			'nav nav';
 	}
 
 	.userContainer {
-		border: 1px solid red;
-		gap: 2em;
-		padding: 0 5px;
+		background: #6c63ff;
+		justify-content: space-around;
+		grid-area: userContainer;
+	}
+	.userName {
+		display: none;
+	}
+
+	.addBooks {
+		margin-top: 2em;
+	}
+}
+
+@media screen and (max-width: 350px) {
+	#nav {
+		width: 70%;
 	}
 }
