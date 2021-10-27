@@ -5,7 +5,6 @@
 }
 
 body {
-	overflow-x: hidden;
 	display: grid;
 	grid-template-columns: 1fr 30%;
 	grid-template-rows: auto;
@@ -181,12 +180,14 @@ input[type='number'] {
 	flex-wrap: wrap;
 	gap: 2em;
 	padding: 1em;
+	border: 1px solid red;
 }
 
 .book {
-	/* border: 1px solid red; */
+	border: 1px solid red;
 	width: fit-content;
 	max-width: 14em;
+	height: fit-content;
 	position: relative;
 	margin-top: 2em;
 	box-shadow: 10px 0 60px rgba(0, 0, 255, 0.1),

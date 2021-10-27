@@ -25,6 +25,8 @@ booksContainer.classList.add('bookContainer');
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const user = auth.currentUser;
+console.log(user);
 
 auth.onAuthStateChanged((user) => {
 	if (user) {
@@ -153,6 +155,7 @@ function handleFormInput(user) {
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		submitBook();
+		// location.reload();
 	});
 
 	async function submitBook() {
@@ -179,20 +182,13 @@ function handleFormInput(user) {
 }
 
 //handle the book delete button
-function handleDeleteBtn() {
-	const btns = document.querySelectorAll('.deleteBtn');
-	console.log(btns);
+function handleDeleteBtn(btns) {
 	btns.forEach((btn) => {
 		btn.addEventListener('click', async function (e) {
-			const q = query(collection(db, `${e.target.dataset.userid}`));
-			const unsubscribe = onSnapshot(q, (querySnapshot) => {
-				querySnapshot.forEach((book) => {
-					deleteDoc(
-						doc(db, `${e.target.dataset.userid}`, `${e.target.dataset.bookid}`)
-					);
-				});
-				console.log(btn.dataset.bookid);
-			});
+			console.log(e.target.dataset.bookid);
+			await deleteDoc(
+				doc(db, `${e.target.dataset.userid}`, `${e.target.dataset.bookid}`)
+			);
 		});
 	});
 }
