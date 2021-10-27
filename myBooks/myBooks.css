@@ -180,11 +180,9 @@ input[type='number'] {
 	flex-wrap: wrap;
 	gap: 2em;
 	padding: 1em;
-	border: 1px solid red;
 }
 
 .book {
-	border: 1px solid red;
 	width: fit-content;
 	max-width: 14em;
 	height: fit-content;
