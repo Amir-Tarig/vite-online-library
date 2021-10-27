@@ -68,7 +68,6 @@ async function userBooksInDb(user) {
 	let bookId = [];
 	const booksLengthInDb = document.querySelector('.bookNumber');
 	const q = query(collection(db, `${user.uid}`));
-	// const querySnapshot = await getDocs(q);
 
 	const unsubscribe = onSnapshot(q, (querySnapshot) => {
 		booksContainer.innerHTML = '';
@@ -151,7 +150,7 @@ function handleFormInput(user) {
 	const isRead = document.querySelector('#read');
 	const form = document.querySelector('#form');
 
-	form.addEventListener('submit', async (e) => {
+	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		submitBook();
 	});
@@ -180,12 +179,20 @@ function handleFormInput(user) {
 }
 
 //handle the book delete button
-function handleDeleteBtn(btns) {
+function handleDeleteBtn() {
+	const btns = document.querySelectorAll('.deleteBtn');
+	console.log(btns);
 	btns.forEach((btn) => {
-		btn.addEventListener('click', async () => {
-			await deleteDoc(
-				doc(db, `${btn.dataset.userid}`, `${btn.dataset.bookid}`)
-			);
+		btn.addEventListener('click', async function (e) {
+			const q = query(collection(db, `${e.target.dataset.userid}`));
+			const unsubscribe = onSnapshot(q, (querySnapshot) => {
+				querySnapshot.forEach((book) => {
+					deleteDoc(
+						doc(db, `${e.target.dataset.userid}`, `${e.target.dataset.bookid}`)
+					);
+				});
+				console.log(btn.dataset.bookid);
+			});
 		});
 	});
 }
