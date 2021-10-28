@@ -152,6 +152,10 @@
 	text-transform: uppercase;
 }
 
+.btn a {
+	text-decoration: none;
+}
+
 .btn:hover {
 	/* border-color: whitesmoke; */
 	background: #6c63ff;
