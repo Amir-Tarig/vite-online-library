@@ -6,8 +6,8 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				main: resolve(__dirname, 'index.html'),
-				booksPage: resolve(__dirname, 'booksPage/books.html'),
-				myBooks: resolve(__dirname, 'myBooks/myBooksPage.html'),
+				booksPage: resolve(__dirname, 'bookspage/books.html'),
+				myBooks: resolve(__dirname, 'mybooks/mybookspage.html'),
 			},
 		},
 	},
