@@ -191,10 +191,10 @@
 }
 
 .toggle {
-	-webkit-transform: translate(-50%, 0);
-	-o-transform: translate(-50%, 0);
-	-ms-transform: translate(-50%, 0);
-	transform: translate(-50%, 0);
+	-webkit-transform: translate(-100%, 0);
+	-o-transform: translate(-100%, 0);
+	-ms-transform: translate(-100%, 0);
+	transform: translate(-100%, 0);
 	color: white;
 	background: #6c63ff;
 	border-radius: 20px;
