@@ -72,6 +72,7 @@ async function userBooksInDb(user) {
 	const unsubscribe = onSnapshot(q, (querySnapshot) => {
 		booksContainer.innerHTML = '';
 		books = [];
+		bookId = [];
 		querySnapshot.forEach((doc) => {
 			books.push(doc.data());
 			bookId.push(doc.id);
@@ -153,7 +154,7 @@ function handleFormInput(user) {
 	form.addEventListener('submit', async (e) => {
 		e.preventDefault();
 		await submitBook();
-		location.reload();
+		// location.reload();
 	});
 
 	async function submitBook() {

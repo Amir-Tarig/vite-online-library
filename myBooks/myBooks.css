@@ -257,8 +257,6 @@ input[type='number'] {
 	width: 100%;
 	grid-area: footer;
 	margin-top: 2em;
-	border-top: 3px dotted #6c63ff;
-	background: #e9e9ec;
 }
 
 .footer img {
