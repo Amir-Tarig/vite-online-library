@@ -4,6 +4,7 @@ This project was made with vanilla Js/Html/Css/Vite/Firebase.
 Great learning experience because i get to use and learn about vite and firebase for the first time to produce this project.
 
 Vite: https://vitejs.dev/guide/why.html
+
 firebase: https://firebase.google.com
 
 The project started very simple and got complicated along the way where the original idea was to simply make a project where the user can add a book(simple form where the user can add a title/page number/author/...) to his/her collection and save it in the localsorage but of course that didn't happen because i wanted the project to look like real website as much as possible instead of simple form and localstorage, and by adding a landing page and fetching books form an external API i was able to demonstrat my knowlage in diferent areas
