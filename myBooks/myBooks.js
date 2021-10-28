@@ -1,6 +1,6 @@
 import './myBooks.css';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js';
-
+import imgUrl from '../images/Untitled.png';
 import {
 	signOut,
 	getAuth,
@@ -41,10 +41,9 @@ signOutBtn.addEventListener('click', () => {
 	window.location.replace('../index.html');
 	signOut(auth)
 		.then(() => {
-			console.log('user is sgin out');
+			console.log('sgined-out');
 		})
 		.catch((error) => {
-			console.log('something went wrong');
 			console.log(error.message);
 		});
 });
@@ -165,7 +164,7 @@ function handleFormInput(user) {
 				author: BookAuthor.value,
 				description: BookDisc.value,
 				pages: TotalPages.value,
-				image: '../images/Untitled.png',
+				image: imgUrl,
 				read: isRead.checked,
 			});
 			BookTitle.value = '';
@@ -173,7 +172,7 @@ function handleFormInput(user) {
 			BookDisc.value = '';
 			TotalPages.value = 0;
 			isRead.checked = false;
-			console.log('Document written with ID: ', docRef.id);
+			// console.log('Document written with ID: ', docRef.id);
 		} catch (e) {
 			console.error('Error adding document: ', e);
 		}
