@@ -1,10 +1,4 @@
 node_modules
 .DS_Store
-bookPage
-images
-myBooks
-index.html
-main.js
-style.css
 dist-ssr
 *.local

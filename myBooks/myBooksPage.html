@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>My Books</title>
+	</head>
+	<body>
+		<header id="header">
+			<div id="logoContainer">
+				<img class="logo" src="../images/Book Apple 1.svg" alt="" />
+			</div>
+
+			<nav id="nav">
+				<ul>
+					<li>
+						<button class="navBtn">
+							<a class="link" href="../index.html">Home</a>
+						</button>
+					</li>
+					<li>
+						<button class="navBtn">
+							<a class="link redirect" href="../BooksPage/books.html"
+								>New Books</a
+							>
+						</button>
+					</li>
+				</ul>
+			</nav>
+
+			<div class="userContainer">
+				<div class="imgContainer">
+					<img class="userImg" />
+				</div>
+				<p class="userName"></p>
+				<button class="sign-out">Sign Out</button>
+			</div>
+		</header>
+
+		<aside class="addBooks">
+			<div class="info">
+				<h2>Add Books</h2>
+				<p class="BIS">Books In Store<span class="bookNumber">0</span></p>
+			</div>
+			<form id="form">
+				<label for="BookTitle">Title</label>
+				<input
+					type="text"
+					id="BookTitle"
+					placeholder="Enter A Book Title"
+					required
+				/>
+
+				<label for="BookAuthor">Author</label>
+				<input
+					type="text"
+					id="BookAuthor"
+					placeholder="Enter A Book Author"
+					required
+				/>
+				<label for="totalPages">Total Pages</label>
+				<input type="number" id="totalPages" min="0" placeholder="0" required />
+
+				<label for="disc">Description</label>
+				<textarea
+					name="disc"
+					id="disc"
+					cols="30"
+					rows="10"
+					placeholder="Your Description goes here..."
+				></textarea>
+				<label for="read">
+					<input type="checkbox" id="read" name="read" />
+					I haven't read the book</label
+				>
+
+				<input class="SubmitBtn" type="submit" value="Add Book" />
+			</form>
+		</aside>
+
+		<footer class="footer">
+			<a href="">
+				<img class="insta" src="/images/instagram.svg" alt="" />
+			</a>
+			<a href="">
+				<img class="facebook" src="/images/facebook.svg" alt="" />
+			</a>
+			<a href="">
+				<img class="youtube" src="/images/youtube.svg" alt="" />
+			</a>
+			<a href="https://github.com/Amir-Tarig/vite-online-library">
+				<img src="/images/github.svg" alt="" />
+			</a>
+		</footer>
+
+		<script type="module" src="./myBooks.js"></script>
+		<script>
+			const firebaseConfig = {
+				apiKey: 'AIzaSyDdsJmYdOqZTbQaBH9eqyjAtHY2oGTtCAo',
+				authDomain: 'online-library-f5697.firebaseapp.com',
+				projectId: 'online-library-f5697',
+				storageBucket: 'online-library-f5697.appspot.com',
+				messagingSenderId: '54897299274',
+				appId: '1:54897299274:web:7c5d011a4dd5988892fbb3',
+			};
+		</script>
+	</body>
+</html>
