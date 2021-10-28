@@ -2,9 +2,9 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	base: '/vite-online-library/',
 	build: {
 		rollupOptions: {
-			base: '/vite-online-library/',
 			input: {
 				main: resolve(__dirname, 'index.html'),
 				booksPage: resolve(__dirname, 'bookspage/books.html'),
