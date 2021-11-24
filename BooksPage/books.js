@@ -30,60 +30,46 @@ function fetchingBooks() {
 	let newBookList = [];
 	const Book = {
 		title: null,
-		categories: null,
 		author: null,
 		description: null,
 		image: null,
-		publisher: null,
 		publishedDate: null,
 		id: null,
-		info: null,
 		price: 0,
 	};
 
 	//fetching book from the API
-	fetch(
-		'https://google-books.p.rapidapi.com/volumes?key=AIzaSyAOsteuaW5ifVvA_RkLXh0mYs6GLAD6ykc',
-		{
-			method: 'GET',
-			headers: {
-				'x-rapidapi-host': 'google-books.p.rapidapi.com',
-				'x-rapidapi-key': '7ecbb014b0mshc95dbe51b85f5d9p186b56jsn682d5e35fb85',
-			},
-		}
-	)
+	fetch('https://book4.p.rapidapi.com/', {
+		method: 'GET',
+		headers: {
+			'x-rapidapi-host': 'book4.p.rapidapi.com',
+			'x-rapidapi-key': '6aff237c00msh14123fa15d54af3p182da9jsn75575ec65d61',
+		},
+	})
 		.then((response) => {
 			return response.json();
 		})
 		.then((data) => {
-			newBookList = [...data.items];
+			console.log(data.books);
+			newBookList = [...data.books];
 			newBookList.map((book, i) => {
-				let fixedSaleability = book.saleInfo.saleability.replace(/_/g, ' ');
-				if (book.volumeInfo.imageLinks === undefined) return;
-				if (!book.volumeInfo.description)
-					book.volumeInfo.description = 'This book has no discription';
-				if (!book.volumeInfo.categories) book.volumeInfo.categories = 'unknown';
-				if (!book.volumeInfo.publisher)
-					book.volumeInfo.publisher = 'Unknown publisher';
-				if (!book.volumeInfo.authors) book.volumeInfo.authors = 'Unknow author';
-				!book.saleInfo.listPrice
-					? (Book.price = fixedSaleability)
-					: book.saleInfo.listPrice.amount === 0
-					? (Book.price = 'FREE')
-					: (Book.price = `${book.saleInfo.listPrice.amount} ${book.saleInfo.listPrice.currencyCode}`);
+				// let fixedSaleability = book.saleInfo.saleability.replace(/_/g, ' ');
+				if (book.url === undefined) return;
+				if (!book.detail) book.detail = 'This book has no discription';
+				if (!book.categories) book.categories = 'unknown';
+				if (!book.publisher) book.publisher = 'Unknown publisher';
+				if (!book.author) book.author = 'Unknow author';
+				!book.price ? (Book.price = '30$') : (Book.price = book.price);
 
-				Book.title = book.volumeInfo.title;
-				Book.categories = book.volumeInfo.categories[0];
-				Book.author = book.volumeInfo.authors[0];
-				Book.description = book.volumeInfo.description;
-				Book.image = book.volumeInfo.imageLinks.smallThumbnail;
-				Book.publisher = book.volumeInfo.publisher;
-				Book.publishedDate = book.volumeInfo.publishedDate;
+				Book.title = book.title;
+				Book.author = book.author;
+				Book.description = book.detail;
+				Book.image = book.url;
+				Book.publishedDate = book.data;
 				Book.id = book.id;
-				Book.info = book.volumeInfo.infoLink;
 				displayBook(Book);
 			});
-			storeInDb(data.items);
+			storeInDb(data.books);
 			return data;
 		})
 
@@ -102,13 +88,13 @@ function displayBook(book) {
 	let imgTag = document.createElement('img');
 	let priceTag = document.createElement('p');
 
-	let btn1 = document.createElement('a');
+	// let btn1 = document.createElement('a');
 	let btn2 = document.createElement('button');
 
-	btn1.classList.add(`link`);
-	btn1.setAttribute('target', `_blank`);
-	btn1.href = book.info;
-	btn1.textContent = 'INFO';
+	// btn1.classList.add(`link`);
+	// btn1.setAttribute('target', `_blank`);
+	// btn1.href = book.info;
+	// btn1.textContent = 'INFO';
 
 	btn2.innerText = 'ADD';
 	btn2.classList.add('btn');
@@ -128,7 +114,7 @@ function displayBook(book) {
 	imgPriceContainer.appendChild(imgTag);
 	imgPriceContainer.appendChild(priceTag);
 
-	buttonsContainer.appendChild(btn1);
+	// buttonsContainer.appendChild(btn1);
 	buttonsContainer.appendChild(btn2);
 
 	Book.appendChild(imgPriceContainer);
@@ -163,13 +149,11 @@ async function storeInDb(books) {
 						if (book.id === btn.dataset.id) {
 							try {
 								let docRef = await addDoc(collection(db, `${user.uid}`), {
-									title: book.volumeInfo.title,
-									categories: book.volumeInfo.categories[0],
-									author: book.volumeInfo.authors[0],
-									description: book.volumeInfo.description,
-									image: book.volumeInfo.imageLinks.smallThumbnail,
-									publisher: book.volumeInfo.publisher,
-									publishedDate: book.volumeInfo.publishedDate,
+									title: book.title,
+									author: book.author,
+									description: book.detail,
+									image: book.url,
+									publishedDate: book.date,
 									id: book.id,
 									read: false,
 								});
