@@ -1,4 +1,4 @@
-THE ODING PROJECT (ONLINE-LIBRARY PROJECT)
+THE ODIN PROJECT (ONLINE-LIBRARY PROJECT)
 
 This project was made with vanilla Js/Html/Css/Vite/Firebase.
 Great learning experience because i get to use and learn about vite and firebase for the first time to produce this project.
